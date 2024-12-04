@@ -2,7 +2,7 @@ package com.sportradar;
 
 import java.util.Comparator;
 
-public class MatchComparator implements Comparator<Match> {
+class MatchComparator implements Comparator<Match> {
 
     @Override
     public int compare(Match m1, Match m2) {

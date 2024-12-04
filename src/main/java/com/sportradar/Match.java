@@ -12,14 +12,14 @@ public class Match {
     private int homeScore = 0;
     private int awayScore = 0;
 
-    public Match(String homeTeam, String awayTeam, LocalDateTime startTime) {
+    Match(String homeTeam, String awayTeam, LocalDateTime startTime) {
         validateTeamNames(homeTeam, awayTeam);
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
         this.startTime = Objects.isNull(startTime) ? LocalDateTime.now() : startTime;
     }
 
-    public Match(String homeTeam, String awayTeam) {
+    Match(String homeTeam, String awayTeam) {
         this(homeTeam, awayTeam, null);
     }
 
@@ -31,10 +31,6 @@ public class Match {
         return awayTeam;
     }
 
-    public LocalDateTime getStartTime() {
-        return startTime;
-    }
-
     public int getHomeScore() {
         return homeScore;
     }
@@ -43,7 +39,11 @@ public class Match {
         return awayScore;
     }
 
-    public int getTotalScore() {
+    LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    int getTotalScore() {
         return homeScore + awayScore;
     }
 

@@ -20,42 +20,42 @@ public class MatchOperationResult implements OperationResult {
         this.message = message;
     }
 
-    public static MatchOperationResult startedSuccessfully() {
+    static MatchOperationResult startedSuccessfully() {
         return new MatchOperationResult(true, STARTED_SUCCESSFULLY);
     }
-    public static MatchOperationResult notStarted() {
+    static MatchOperationResult notStarted() {
         return new MatchOperationResult(true, MATCH_COULD_NOT_BE_STARTED);
     }
 
-    public static MatchOperationResult alreadyPlaying() {
+    static MatchOperationResult alreadyPlaying() {
         return new MatchOperationResult(false, TEAM_ALREADY_PLAYING);
     }
 
-    public static MatchOperationResult unexpectedError(String message) {
+    static MatchOperationResult unexpectedError(String message) {
         return new MatchOperationResult(false, message);
     }
 
-    public static MatchOperationResult nullTeamNames() {
+    static MatchOperationResult nullTeamNames() {
         return new MatchOperationResult(false, CANNOT_BE_NULL);
     }
 
-    public static MatchOperationResult emptyTeamNames() {
+    static MatchOperationResult emptyTeamNames() {
         return new MatchOperationResult(false, NAMES_CANNOT_BE_EMPTY);
     }
 
-    public static MatchOperationResult finishedSuccessfully() {
+    static MatchOperationResult finishedSuccessfully() {
         return new MatchOperationResult(true, FINISHED_SUCCESSFULLY);
     }
 
-    public static MatchOperationResult notExists() {
+    static MatchOperationResult notExists() {
         return new MatchOperationResult(false, MATCH_DOES_NOT_EXIST);
     }
 
-    public static MatchOperationResult updatedSuccessfully() {
+    static MatchOperationResult updatedSuccessfully() {
         return new MatchOperationResult(true, SCORES_UPDATED_SUCCESSFULLY);
     }
 
-    public static MatchOperationResult notFinished() {
+    static MatchOperationResult notFinished() {
         return new MatchOperationResult(false, COULD_NOT_BE_FINISHED);
     }
 
