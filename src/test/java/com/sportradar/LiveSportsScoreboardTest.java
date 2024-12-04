@@ -13,6 +13,8 @@ public class LiveSportsScoreboardTest {
     private static final String SWEDEN = "Sweden";
     private static final String SPAIN_UPPER_CASE = "SPAIN";
     private static final String PORTUGAL = "Portugal";
+    private static final String GERMANY = "Germany";
+    private static final String AUSTRIA = "Austria";
 
     @Test
     public void shouldStartMatch() {
@@ -74,6 +76,67 @@ public class LiveSportsScoreboardTest {
 
         //then
         assertEquals(1, matches.size(), "The number of matches in the scoreboard is incorrect");
+    }
+
+    @Test
+    public void shouldGetMatchesWithEmptyResult() {
+
+        //given
+        LiveSportsScoreboard liveSportsScoreboard = new LiveSportsScoreboard();
+
+        //when
+        Set<Match> matches = liveSportsScoreboard.getMatches();
+
+        //then
+        assertTrue(matches.isEmpty(), "The scoreboard should be empty");
+
+    }
+
+    @Test
+    public void shouldGetMatchesOrderedByTotalScoreFirst() {
+
+        //given
+        LiveSportsScoreboard liveSportsScoreboard = new LiveSportsScoreboard();
+        liveSportsScoreboard.startMatch(SPAIN, MEXICO);
+        liveSportsScoreboard.startMatch(SWEDEN, PORTUGAL);
+        liveSportsScoreboard.updateScore(SPAIN, MEXICO, 3, 2);
+        liveSportsScoreboard.updateScore(SWEDEN, PORTUGAL, 1, 1);
+
+        //when
+        Set<Match> matches = liveSportsScoreboard.getMatches();
+
+        //then
+        Match[] matchArray = matches.toArray(new Match[0]);
+        assertAll(
+                () -> assertEquals(2, matches.size(), "The number of matches in the scoreboard is incorrect"),
+                () -> assertEquals(5, matchArray[0].getTotalScore(), "The first match should have the highest total score"),
+                () -> assertEquals(2, matchArray[1].getTotalScore(), "The second match should have the second highest total score")
+        );
+
+    }
+
+    @Test
+    public void shouldGetMatchesOrderedByStartTimeDescWhenScoresAreEqual() {
+
+        //given
+        LiveSportsScoreboard liveSportsScoreboard = new LiveSportsScoreboard();
+        liveSportsScoreboard.startMatch(SPAIN, MEXICO);
+        liveSportsScoreboard.startMatch(GERMANY, AUSTRIA);
+        liveSportsScoreboard.startMatch(SWEDEN, PORTUGAL);
+        liveSportsScoreboard.updateScore(GERMANY, AUSTRIA, 2, 2);
+
+        //when
+        Set<Match> matches = liveSportsScoreboard.getMatches();
+
+        //then
+        Match[] matchArray = matches.toArray(new Match[0]);
+        assertAll(
+                () -> assertEquals(3, matches.size(), "The number of matches in the scoreboard is incorrect"),
+                () -> assertEquals(GERMANY, matchArray[0].getHomeTeam(), "The first match should have the highest score"),
+                () -> assertEquals(SWEDEN, matchArray[1].getHomeTeam(), "The second match should have the most recent start time"),
+                () -> assertEquals(SPAIN, matchArray[1].getHomeTeam(), "The last match should have the oldest start time")
+        );
+
     }
 
     @Test
