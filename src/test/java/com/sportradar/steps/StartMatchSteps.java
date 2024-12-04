@@ -1,37 +1,61 @@
 package com.sportradar.steps;
 
+import com.sportradar.LiveSportsScoreboard;
+import com.sportradar.Match;
+import com.sportradar.OperationResult;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 public class StartMatchSteps {
+
+    private LiveSportsScoreboard scoreboard;
+    private Match startedMatch;
+
     @Given("the scoreboard is empty")
     public void theScoreboardIsEmpty() {
-        // TODO: Implement
+        scoreboard = new LiveSportsScoreboard();
+        assertTrue(scoreboard.getMatches().isEmpty());
     }
 
     @When("I start a new match between {string} and {string}")
     public void iStartANewMatchBetweenAnd(String homeTeam, String awayTeam) {
-        // TODO: Implement
+        OperationResult result = scoreboard.startMatch(homeTeam, awayTeam);
+        startedMatch = scoreboard.getMatches().stream()
+                .filter(match -> match.getHomeTeam().equals(homeTeam) && match.getAwayTeam().equals(awayTeam))
+                .findFirst()
+                .orElse(null);
+        assertAll(
+                () -> assertTrue(result.isSuccess()),
+                () -> assertNotNull(startedMatch, "Match should be added to the scoreboard")
+        );
     }
 
     @Then("the scoreboard contains {int} match")
     public void theScoreboardContainsMatch(int matchCount) {
-        // TODO: Implement
+        assertEquals(matchCount, scoreboard.getMatches().size(), "The number of matches in the scoreboard is incorrect");
     }
 
     @Then("the match has a home team {string}")
     public void theMatchHasAHomeTeam(String homeTeam) {
-        // TODO: Implement
+        assertEquals(homeTeam, startedMatch.getHomeTeam(), "The home team is incorrect");
     }
 
     @Then("the match has an away team {string}")
     public void theMatchHasAAwayTeam(String awayTeam) {
-        // TODO: Implement
+        assertEquals(awayTeam, startedMatch.getAwayTeam(), "The away team is incorrect");
     }
 
     @Then("the score is {int} - {int}")
     public void theScoreIs(int homeScore, int awayScore) {
-        // TODO: Implement
+        assertAll(
+                () -> assertEquals(homeScore, startedMatch.getHomeScore(), "The home score is incorrect"),
+                () -> assertEquals(awayScore, startedMatch.getAwayScore(), "The away score is incorrect")
+        );
     }
 }
