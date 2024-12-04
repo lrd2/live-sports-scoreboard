@@ -2,6 +2,8 @@ package com.sportradar;
 
 import org.junit.Test;
 
+import java.util.Set;
+
 import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -174,6 +176,20 @@ public class ScoreboardTest {
                 () -> assertTrue(scoreboard.teamIsPlaying(SPAIN), "Spain should be marked as playing"),
                 () -> assertTrue(scoreboard.teamIsPlaying(MEXICO), "Mexico should be marked as playing")
         );
+    }
+
+    @Test
+    public void shouldGetMatches() {
+        //given
+        Scoreboard scoreboard = new Scoreboard();
+        Match match = new Match(SPAIN, MEXICO);
+        scoreboard.addMatch(match);
+
+        //when
+        Set<Match> matches = scoreboard.getMatches();
+
+        //then
+        assertTrue(matches.contains(match), "The match should be in the list of matches");
     }
 
 }

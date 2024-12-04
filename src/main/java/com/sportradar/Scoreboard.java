@@ -10,6 +10,10 @@ class Scoreboard {
     private final Set<Match> matches = new TreeSet<>(new MatchComparator());
     private final Set<String> teamsInvolved = new HashSet<>();
 
+    Set<Match> getMatches() {
+        return matches;
+    }
+
     boolean addMatch(Match newMatch) {
         if (Objects.isNull(newMatch)) {
             throw new IllegalArgumentException("Match cannot be null");
