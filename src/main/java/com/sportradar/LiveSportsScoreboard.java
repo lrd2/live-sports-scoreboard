@@ -36,6 +36,11 @@ public class LiveSportsScoreboard {
         }
     }
 
+    public OperationResult updateScore(String homeTeam, String awayTeam, int homeScore, int awayScore) {
+        //TODO implement
+        return null;
+    }
+
     public Set<Match> getMatches() {
         return scoreboard.getMatches();
     }
