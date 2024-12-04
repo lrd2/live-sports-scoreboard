@@ -4,11 +4,13 @@ public class MatchOperationResult implements OperationResult {
 
     private static final String STARTED_SUCCESSFULLY = "Match started successfully.";
     private static final String TEAM_ALREADY_PLAYING = "One of the teams is already playing.";
-    private static final String CANNOT_BE_NULL = "Team names cannot be null";
+    private static final String CANNOT_BE_NULL = "Team names cannot be null.";
     private static final String MATCH_COULD_NOT_BE_STARTED = "Match could not be started";
-    private static final String MUST_BE_NON_NEGATIVE = "Scores must be non-negative.";
     private static final String MATCH_DOES_NOT_EXIST = "Match does not exist.";
     private static final String SCORES_UPDATED_SUCCESSFULLY = "Scores updated successfully.";
+    private static final String FINISHED_SUCCESSFULLY = "Match finished successfully.";
+    private static final String COULD_NOT_BE_FINISHED = "Match could not be finished";
+    private static final String NAMES_CANNOT_BE_EMPTY = "Team names cannot be empty.";
 
     private final boolean success;
     private final String message;
@@ -37,8 +39,12 @@ public class MatchOperationResult implements OperationResult {
         return new MatchOperationResult(false, CANNOT_BE_NULL);
     }
 
-    public static MatchOperationResult invalidScore() {
-        return new MatchOperationResult(false, MUST_BE_NON_NEGATIVE);
+    public static MatchOperationResult emptyTeamNames() {
+        return new MatchOperationResult(false, NAMES_CANNOT_BE_EMPTY);
+    }
+
+    public static MatchOperationResult finishedSuccessfully() {
+        return new MatchOperationResult(true, FINISHED_SUCCESSFULLY);
     }
 
     public static MatchOperationResult notExists() {
@@ -47,6 +53,10 @@ public class MatchOperationResult implements OperationResult {
 
     public static MatchOperationResult updatedSuccessfully() {
         return new MatchOperationResult(true, SCORES_UPDATED_SUCCESSFULLY);
+    }
+
+    public static MatchOperationResult notFinished() {
+        return new MatchOperationResult(false, COULD_NOT_BE_FINISHED);
     }
 
     @Override

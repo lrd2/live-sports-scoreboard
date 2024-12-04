@@ -12,10 +12,11 @@ public class LiveSportsScoreboard {
     }
 
     public OperationResult startMatch(String homeTeam, String awayTeam) {
-        if (Objects.isNull(homeTeam) || Objects.isNull(awayTeam)) {
-            return MatchOperationResult.nullTeamNames();
-        }
+        OperationResult validationResult = validateTeamNames(homeTeam, awayTeam);
+        if (Objects.nonNull(validationResult)) return validationResult;
+
         Match newMatch = null;
+
         try {
             if (scoreboard.teamIsPlaying(homeTeam) || scoreboard.teamIsPlaying(awayTeam)) {
                 return MatchOperationResult.alreadyPlaying();
@@ -37,12 +38,13 @@ public class LiveSportsScoreboard {
     }
 
     public OperationResult updateScore(String homeTeam, String awayTeam, int homeScore, int awayScore) {
+        OperationResult validationResult = validateTeamNames(homeTeam, awayTeam);
+        if (Objects.nonNull(validationResult)) return validationResult;
+
         Integer homeScoreBeforeUpdate = null;
         Integer awayScoreBeforeUpdate = null;
         Match matchToUpdate = null;
-        if (Objects.isNull(homeTeam) || Objects.isNull(awayTeam)) {
-            return MatchOperationResult.nullTeamNames();
-        }
+
         try {
             matchToUpdate = scoreboard.findMatch(homeTeam, awayTeam);
             if (Objects.isNull(matchToUpdate)) {
@@ -59,8 +61,38 @@ public class LiveSportsScoreboard {
     }
 
     public OperationResult finishMatch(String homeTeam, String awayTeam) {
-        //TODO implement this method
-        return null;
+        OperationResult validationResult = validateTeamNames(homeTeam, awayTeam);
+        if (Objects.nonNull(validationResult)) return validationResult;
+
+        boolean matchFinished = false;
+        boolean teamsInvolvedRemoved = false;
+        Match matchToFinish = null;
+
+        try {
+            matchToFinish = scoreboard.findMatch(homeTeam, awayTeam);
+            if (Objects.isNull(matchToFinish)) {
+                return MatchOperationResult.notExists();
+            }
+            matchFinished = scoreboard.removeMatch(matchToFinish);
+            teamsInvolvedRemoved = scoreboard.removeTeamsInvolved(homeTeam, awayTeam);
+            if (matchFinished && teamsInvolvedRemoved) {
+                return MatchOperationResult.finishedSuccessfully();
+            }
+            rollbackFinishMatch(homeTeam, awayTeam, matchFinished, matchToFinish, teamsInvolvedRemoved);
+            return MatchOperationResult.notFinished();
+        } catch (Exception e) {
+            rollbackFinishMatch(homeTeam, awayTeam, matchFinished, matchToFinish, teamsInvolvedRemoved);
+            return MatchOperationResult.unexpectedError(e.getMessage());
+        }
+    }
+
+    private void rollbackFinishMatch(String homeTeam, String awayTeam, boolean matchFinished, Match matchToFinish, boolean teamsInvolvedRemoved) {
+        if (matchFinished) {
+            scoreboard.addMatch(matchToFinish);
+        }
+        if (teamsInvolvedRemoved) {
+            scoreboard.addTeamsInvolved(homeTeam, awayTeam);
+        }
     }
 
     public Set<Match> getMatches() {
@@ -77,6 +109,16 @@ public class LiveSportsScoreboard {
         if (Objects.nonNull(matchToUpdate) && Objects.nonNull(homeScoreBeforeUpdate) && Objects.nonNull(awayScoreBeforeUpdate)) {
             matchToUpdate.updateScores(homeScoreBeforeUpdate, awayScoreBeforeUpdate);
         }
+    }
+
+    private OperationResult validateTeamNames(String homeTeam, String awayTeam) {
+        if (Objects.isNull(homeTeam) || Objects.isNull(awayTeam)) {
+            return MatchOperationResult.nullTeamNames();
+        }
+        if (homeTeam.trim().isEmpty() || awayTeam.trim().isEmpty()) {
+            return MatchOperationResult.emptyTeamNames();
+        }
+        return null;
     }
 
 }
