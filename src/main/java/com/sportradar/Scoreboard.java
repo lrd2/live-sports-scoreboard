@@ -1,6 +1,8 @@
 package com.sportradar;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
@@ -10,8 +12,8 @@ class Scoreboard {
     private final Set<Match> matches = new TreeSet<>(new MatchComparator());
     private final Set<String> teamsInvolved = new HashSet<>();
 
-    Set<Match> getMatches() {
-        return matches;
+    List<Match> getMatches() {
+        return new ArrayList<>(matches);
     }
 
     boolean addMatch(Match newMatch) {
@@ -57,6 +59,15 @@ class Scoreboard {
                 .filter(match -> match.getHomeTeam().equals(homeTeam) && match.getAwayTeam().equals(awayTeam))
                 .findFirst()
                 .orElse(null);
+    }
+
+    boolean updateScoreboardAfterMatchUpdate(Match updatedMatch) {
+        if (Objects.isNull(updatedMatch)) {
+            throw new IllegalArgumentException("Match cannot be null");
+        }
+        boolean matchRemoved = matches.remove(updatedMatch);
+        boolean matchAdded = matchRemoved && matches.add(updatedMatch);
+        return matchRemoved && matchAdded;
     }
 
 }

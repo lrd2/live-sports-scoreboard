@@ -1,12 +1,12 @@
 package com.sportradar;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import java.util.Set;
+import java.util.List;
 
-import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ScoreboardTest {
@@ -186,7 +186,7 @@ public class ScoreboardTest {
         scoreboard.addMatch(match);
 
         //when
-        Set<Match> matches = scoreboard.getMatches();
+        List<Match> matches = scoreboard.getMatches();
 
         //then
         assertTrue(matches.contains(match), "The match should be in the list of matches");

@@ -1,7 +1,7 @@
 package com.sportradar;
 
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 public class LiveSportsScoreboard {
 
@@ -53,6 +53,11 @@ public class LiveSportsScoreboard {
             homeScoreBeforeUpdate = matchToUpdate.getHomeScore();
             awayScoreBeforeUpdate = matchToUpdate.getAwayScore();
             matchToUpdate.updateScores(homeScore, awayScore);
+            boolean scoreboardUpdated = scoreboard.updateScoreboardAfterMatchUpdate(matchToUpdate);
+            if (scoreboardUpdated) {
+                return MatchOperationResult.updatedSuccessfully();
+            }
+            rollbackUpdateScore(homeScoreBeforeUpdate, awayScoreBeforeUpdate, matchToUpdate);
             return MatchOperationResult.updatedSuccessfully();
         } catch (Exception e) {
             rollbackUpdateScore(homeScoreBeforeUpdate, awayScoreBeforeUpdate, matchToUpdate);
@@ -86,6 +91,10 @@ public class LiveSportsScoreboard {
         }
     }
 
+    public List<Match> getMatches() {
+        return scoreboard.getMatches();
+    }
+
     private void rollbackFinishMatch(String homeTeam, String awayTeam, boolean matchFinished, Match matchToFinish, boolean teamsInvolvedRemoved) {
         if (matchFinished) {
             scoreboard.addMatch(matchToFinish);
@@ -93,10 +102,6 @@ public class LiveSportsScoreboard {
         if (teamsInvolvedRemoved) {
             scoreboard.addTeamsInvolved(homeTeam, awayTeam);
         }
-    }
-
-    public Set<Match> getMatches() {
-        return scoreboard.getMatches();
     }
 
     private void rollbackStartMatch(String homeTeam, String awayTeam, Match newMatch) {
@@ -108,6 +113,7 @@ public class LiveSportsScoreboard {
     private void rollbackUpdateScore(Integer homeScoreBeforeUpdate, Integer awayScoreBeforeUpdate, Match matchToUpdate) {
         if (Objects.nonNull(matchToUpdate) && Objects.nonNull(homeScoreBeforeUpdate) && Objects.nonNull(awayScoreBeforeUpdate)) {
             matchToUpdate.updateScores(homeScoreBeforeUpdate, awayScoreBeforeUpdate);
+            scoreboard.updateScoreboardAfterMatchUpdate(matchToUpdate);
         }
     }
 
