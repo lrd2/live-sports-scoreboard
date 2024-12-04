@@ -78,4 +78,31 @@ public class MatchTest {
         assertEquals("Home and away team names must be different", exception.getMessage(), "Exception message is not as expected");
     }
 
+    @Test
+    public void shouldUpdateScores() {
+        //given
+        Match match = new Match(SPAIN, MEXICO);
+
+        //when
+        match.updateScores(1, 2);
+
+        //then
+        assertAll(
+                () -> assertEquals(1, match.getHomeScore(), "Home score is not as expected"),
+                () -> assertEquals(2, match.getAwayScore(), "Away score is not as expected")
+        );
+    }
+
+    @Test
+    public void shouldThrowWhenScoresAreNegative() {
+        //given
+        Match match = new Match(SPAIN, MEXICO);
+
+        //when
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> match.updateScores(-1, 2));
+
+        //then
+        assertEquals("Scores must be non-negative.", exception.getMessage(), "Exception message is not as expected");
+    }
+
 }

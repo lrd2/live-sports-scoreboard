@@ -104,7 +104,7 @@ public class ScoreboardTest {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> scoreboard.addTeamsInvolved(SPAIN, null));
 
         //then
-        assertTrue(exception.getMessage().contains("Team cannot be null"), "Exception should be thrown when team is null");
+        assertTrue(exception.getMessage().contains("Team name cannot be null"), "Exception should be thrown when team is null");
 
     }
 
@@ -132,7 +132,7 @@ public class ScoreboardTest {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> scoreboard.removeTeamsInvolved(SPAIN, null));
 
         //then
-        assertTrue(exception.getMessage().contains("Team cannot be null"), "Exception should be thrown when team is null");
+        assertTrue(exception.getMessage().contains("Team name cannot be null"), "Exception should be thrown when team is null");
 
     }
 
@@ -190,6 +190,48 @@ public class ScoreboardTest {
 
         //then
         assertTrue(matches.contains(match), "The match should be in the list of matches");
+    }
+
+    @Test
+    public void shouldFindMatch() {
+        //given
+        Scoreboard scoreboard = new Scoreboard();
+        Match match = new Match(SPAIN, MEXICO);
+        scoreboard.addMatch(match);
+
+        //when
+        Match foundMatch = scoreboard.findMatch(SPAIN, MEXICO);
+
+        //then
+        assertTrue(match.equals(foundMatch), "The match should be found");
+    }
+
+    @Test
+    public void shouldNotFindMatch() {
+        //given
+        Scoreboard scoreboard = new Scoreboard();
+        Match match = new Match(SPAIN, MEXICO);
+        scoreboard.addMatch(match);
+
+        //when
+        Match foundMatch = scoreboard.findMatch(MEXICO, SPAIN);
+
+        //then
+        assertTrue(foundMatch == null, "The match should not be found");
+
+    }
+
+    @Test
+    public void shouldThrowWhenTeamNameIsNull() {
+
+        //given
+        Scoreboard scoreboard = new Scoreboard();
+
+        //when
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> scoreboard.findMatch(SPAIN, null));
+
+        //then
+        assertTrue(exception.getMessage().contains("Team name cannot be null"), "Exception should be thrown when team is null");
     }
 
 }

@@ -47,6 +47,14 @@ public class Match {
         return homeScore + awayScore;
     }
 
+    void updateScores(int homeScore, int awayScore) {
+        if (homeScore < 0 || awayScore < 0) {
+            throw new IllegalArgumentException("Scores must be non-negative.");
+        }
+        this.homeScore = homeScore;
+        this.awayScore = awayScore;
+    }
+
     private void validateTeamNames(String homeTeam, String awayTeam) {
         if (Objects.isNull(homeTeam) || Objects.isNull(awayTeam)) {
             throw new IllegalArgumentException("Team names cannot be null");

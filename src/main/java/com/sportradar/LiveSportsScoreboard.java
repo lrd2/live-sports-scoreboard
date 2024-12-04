@@ -37,8 +37,25 @@ public class LiveSportsScoreboard {
     }
 
     public OperationResult updateScore(String homeTeam, String awayTeam, int homeScore, int awayScore) {
-        //TODO implement
-        return null;
+        Integer homeScoreBeforeUpdate = null;
+        Integer awayScoreBeforeUpdate = null;
+        Match matchToUpdate = null;
+        if (Objects.isNull(homeTeam) || Objects.isNull(awayTeam)) {
+            return MatchOperationResult.nullTeamNames();
+        }
+        try {
+            matchToUpdate = scoreboard.findMatch(homeTeam, awayTeam);
+            if (Objects.isNull(matchToUpdate)) {
+                return MatchOperationResult.notExists();
+            }
+            homeScoreBeforeUpdate = matchToUpdate.getHomeScore();
+            awayScoreBeforeUpdate = matchToUpdate.getAwayScore();
+            matchToUpdate.updateScores(homeScore, awayScore);
+            return MatchOperationResult.updatedSuccessfully();
+        } catch (Exception e) {
+            rollbackUpdateScore(homeScoreBeforeUpdate, awayScoreBeforeUpdate, matchToUpdate);
+            return MatchOperationResult.unexpectedError(e.getMessage());
+        }
     }
 
     public Set<Match> getMatches() {
@@ -48,6 +65,12 @@ public class LiveSportsScoreboard {
     private void rollbackStartMatch(String homeTeam, String awayTeam, Match newMatch) {
         if (Objects.nonNull(newMatch) && scoreboard.removeMatch(newMatch)) {
             scoreboard.removeTeamsInvolved(homeTeam, awayTeam);
+        }
+    }
+
+    private void rollbackUpdateScore(Integer homeScoreBeforeUpdate, Integer awayScoreBeforeUpdate, Match matchToUpdate) {
+        if (Objects.nonNull(matchToUpdate) && Objects.nonNull(homeScoreBeforeUpdate) && Objects.nonNull(awayScoreBeforeUpdate)) {
+            matchToUpdate.updateScores(homeScoreBeforeUpdate, awayScoreBeforeUpdate);
         }
     }
 

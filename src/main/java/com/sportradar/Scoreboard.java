@@ -30,23 +30,33 @@ class Scoreboard {
 
     boolean addTeamsInvolved(String homeTeam, String awayTeam) {
         if (Objects.isNull(homeTeam) || Objects.isNull(awayTeam)) {
-            throw new IllegalArgumentException("Team cannot be null");
+            throw new IllegalArgumentException("Team name cannot be null");
         }
         return teamsInvolved.add(homeTeam.trim().toLowerCase()) && teamsInvolved.add(awayTeam.trim().toLowerCase());
     }
 
     boolean removeTeamsInvolved(String homeTeam, String awayTeam) {
         if (Objects.isNull(homeTeam) || Objects.isNull(awayTeam)) {
-            throw new IllegalArgumentException("Team cannot be null");
+            throw new IllegalArgumentException("Team name cannot be null");
         }
         return teamsInvolved.remove(homeTeam.trim().toLowerCase()) && teamsInvolved.remove(awayTeam.trim().toLowerCase());
     }
 
     boolean teamIsPlaying(String team) {
         if (Objects.isNull(team)) {
-            throw new IllegalArgumentException("Team cannot be null");
+            throw new IllegalArgumentException("Team name cannot be null");
         }
         return teamsInvolved.contains(team.trim().toLowerCase());
+    }
+
+    Match findMatch(String homeTeam, String awayTeam) {
+        if (Objects.isNull(homeTeam) || Objects.isNull(awayTeam)) {
+            throw new IllegalArgumentException("Team name cannot be null");
+        }
+        return matches.stream()
+                .filter(match -> match.getHomeTeam().equals(homeTeam) && match.getAwayTeam().equals(awayTeam))
+                .findFirst()
+                .orElse(null);
     }
 
 }
