@@ -69,17 +69,18 @@ public class Match {
         }
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Match match = (Match) o;
-        return homeScore == match.homeScore && awayScore == match.awayScore && Objects.equals(homeTeam, match.homeTeam) && Objects.equals(awayTeam, match.awayTeam) && Objects.equals(startTime, match.startTime);
+        return Objects.equals(homeTeam, match.homeTeam) && Objects.equals(awayTeam, match.awayTeam);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(homeTeam, awayTeam, startTime, homeScore, awayScore);
+        return Objects.hash(homeTeam, awayTeam);
     }
 
 }

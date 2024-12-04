@@ -52,13 +52,13 @@ public class LiveSportsScoreboard {
             }
             homeScoreBeforeUpdate = matchToUpdate.getHomeScore();
             awayScoreBeforeUpdate = matchToUpdate.getAwayScore();
-            matchToUpdate.updateScores(homeScore, awayScore);
-            boolean scoreboardUpdated = scoreboard.updateScoreboardAfterMatchUpdate(matchToUpdate);
-            if (scoreboardUpdated) {
+            boolean updatedSuccessfully = attemptToUpdateMatch(homeScore, awayScore, matchToUpdate);
+            if (updatedSuccessfully) {
                 return MatchOperationResult.updatedSuccessfully();
+            } else {
+                rollbackUpdateScore(homeScoreBeforeUpdate, awayScoreBeforeUpdate, matchToUpdate);
+                return MatchOperationResult.notUpdated();
             }
-            rollbackUpdateScore(homeScoreBeforeUpdate, awayScoreBeforeUpdate, matchToUpdate);
-            return MatchOperationResult.updatedSuccessfully();
         } catch (Exception e) {
             rollbackUpdateScore(homeScoreBeforeUpdate, awayScoreBeforeUpdate, matchToUpdate);
             return MatchOperationResult.unexpectedError(e.getMessage());
@@ -112,8 +112,9 @@ public class LiveSportsScoreboard {
 
     private void rollbackUpdateScore(Integer homeScoreBeforeUpdate, Integer awayScoreBeforeUpdate, Match matchToUpdate) {
         if (Objects.nonNull(matchToUpdate) && Objects.nonNull(homeScoreBeforeUpdate) && Objects.nonNull(awayScoreBeforeUpdate)) {
+            scoreboard.removeMatch(matchToUpdate);
             matchToUpdate.updateScores(homeScoreBeforeUpdate, awayScoreBeforeUpdate);
-            scoreboard.updateScoreboardAfterMatchUpdate(matchToUpdate);
+            scoreboard.addMatch(matchToUpdate);
         }
     }
 
@@ -125,6 +126,15 @@ public class LiveSportsScoreboard {
             return MatchOperationResult.emptyTeamNames();
         }
         return null;
+    }
+
+    private boolean attemptToUpdateMatch(int homeScore, int awayScore, Match matchToUpdate) {
+        boolean addedSuccessfully = false;
+        if (scoreboard.removeMatch(matchToUpdate)) {
+            matchToUpdate.updateScores(homeScore, awayScore);
+            addedSuccessfully = scoreboard.addMatch(matchToUpdate);
+        }
+        return addedSuccessfully;
     }
 
 }

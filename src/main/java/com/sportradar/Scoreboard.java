@@ -61,13 +61,4 @@ class Scoreboard {
                 .orElse(null);
     }
 
-    boolean updateScoreboardAfterMatchUpdate(Match updatedMatch) {
-        if (Objects.isNull(updatedMatch)) {
-            throw new IllegalArgumentException("Match cannot be null");
-        }
-        boolean matchRemoved = matches.remove(updatedMatch);
-        boolean matchAdded = matchRemoved && matches.add(updatedMatch);
-        return matchRemoved && matchAdded;
-    }
-
 }

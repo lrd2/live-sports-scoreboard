@@ -11,6 +11,7 @@ public class MatchOperationResult implements OperationResult {
     private static final String FINISHED_SUCCESSFULLY = "Match finished successfully.";
     private static final String COULD_NOT_BE_FINISHED = "Match could not be finished";
     private static final String NAMES_CANNOT_BE_EMPTY = "Team names cannot be empty.";
+    private static final String COULD_NOT_BE_UPDATED = "Match could not be updated.";
 
     private final boolean success;
     private final String message;
@@ -53,6 +54,10 @@ public class MatchOperationResult implements OperationResult {
 
     static MatchOperationResult updatedSuccessfully() {
         return new MatchOperationResult(true, SCORES_UPDATED_SUCCESSFULLY);
+    }
+
+    static MatchOperationResult notUpdated() {
+        return new MatchOperationResult(true, COULD_NOT_BE_UPDATED);
     }
 
     static MatchOperationResult notFinished() {
