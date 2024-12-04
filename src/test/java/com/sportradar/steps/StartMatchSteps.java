@@ -3,7 +3,6 @@ package com.sportradar.steps;
 import com.sportradar.LiveSportsScoreboard;
 import com.sportradar.Match;
 import com.sportradar.OperationResult;
-import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -14,13 +13,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class StartMatchSteps {
 
-    private LiveSportsScoreboard scoreboard;
+    private final LiveSportsScoreboard scoreboard;
     private Match startedMatch;
 
-    @Given("the scoreboard is empty")
-    public void theScoreboardIsEmpty() {
-        scoreboard = new LiveSportsScoreboard();
-        assertTrue(scoreboard.getMatches().isEmpty());
+    public StartMatchSteps(CommonSteps commonSteps) {
+        this.scoreboard = commonSteps.getScoreboard();
     }
 
     @When("I start a new match between {string} and {string}")
