@@ -1,10 +1,16 @@
 package com.sportradar;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import java.util.Set;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LiveSportsScoreboardTest {
 
@@ -72,7 +78,7 @@ public class LiveSportsScoreboardTest {
         liveSportsScoreboard.startMatch(SPAIN, MEXICO);
 
         //when
-        Set<Match> matches = liveSportsScoreboard.getMatches();
+        List<Match> matches = liveSportsScoreboard.getMatches();
 
         //then
         assertEquals(1, matches.size(), "The number of matches in the scoreboard is incorrect");
@@ -85,7 +91,7 @@ public class LiveSportsScoreboardTest {
         LiveSportsScoreboard liveSportsScoreboard = new LiveSportsScoreboard();
 
         //when
-        Set<Match> matches = liveSportsScoreboard.getMatches();
+        List<Match> matches = liveSportsScoreboard.getMatches();
 
         //then
         assertTrue(matches.isEmpty(), "The scoreboard should be empty");
@@ -103,14 +109,13 @@ public class LiveSportsScoreboardTest {
         liveSportsScoreboard.updateScore(SWEDEN, PORTUGAL, 1, 1);
 
         //when
-        Set<Match> matches = liveSportsScoreboard.getMatches();
+        List<Match> matches = liveSportsScoreboard.getMatches();
 
         //then
-        Match[] matchArray = matches.toArray(new Match[0]);
         assertAll(
                 () -> assertEquals(2, matches.size(), "The number of matches in the scoreboard is incorrect"),
-                () -> assertEquals(5, matchArray[0].getTotalScore(), "The first match should have the highest total score"),
-                () -> assertEquals(2, matchArray[1].getTotalScore(), "The second match should have the second highest total score")
+                () -> assertEquals(5, matches.get(0).getTotalScore(), "The first match should have the highest total score"),
+                () -> assertEquals(2, matches.get(1).getTotalScore(), "The second match should have the second highest total score")
         );
 
     }
@@ -126,15 +131,14 @@ public class LiveSportsScoreboardTest {
         liveSportsScoreboard.updateScore(GERMANY, AUSTRIA, 2, 2);
 
         //when
-        Set<Match> matches = liveSportsScoreboard.getMatches();
+        List<Match> matches = liveSportsScoreboard.getMatches();
 
         //then
-        Match[] matchArray = matches.toArray(new Match[0]);
         assertAll(
                 () -> assertEquals(3, matches.size(), "The number of matches in the scoreboard is incorrect"),
-                () -> assertEquals(GERMANY, matchArray[0].getHomeTeam(), "The first match should have the highest score"),
-                () -> assertEquals(SWEDEN, matchArray[1].getHomeTeam(), "The second match should have the most recent start time"),
-                () -> assertEquals(SPAIN, matchArray[1].getHomeTeam(), "The last match should have the oldest start time")
+                () -> assertEquals(GERMANY, matches.get(0).getHomeTeam(), "The first match should have the highest score"),
+                () -> assertEquals(SWEDEN, matches.get(1).getHomeTeam(), "The second match should have the most recent start time"),
+                () -> assertEquals(SPAIN, matches.get(2).getHomeTeam(), "The last match should have the oldest start time")
         );
 
     }
@@ -145,7 +149,7 @@ public class LiveSportsScoreboardTest {
         LiveSportsScoreboard liveSportsScoreboard = new LiveSportsScoreboard();
 
         //when
-        Set<Match> matches = liveSportsScoreboard.getMatches();
+        List<Match> matches = liveSportsScoreboard.getMatches();
 
         //then
         assertTrue(matches.isEmpty(), "The scoreboard should be empty");
@@ -158,7 +162,7 @@ public class LiveSportsScoreboardTest {
         liveSportsScoreboard.startMatch(SPAIN, " ");
 
         //when
-        Set<Match> matches = liveSportsScoreboard.getMatches();
+        List<Match> matches = liveSportsScoreboard.getMatches();
 
         //then
         assertTrue(matches.isEmpty(), "The match should not be in the list of matches");
