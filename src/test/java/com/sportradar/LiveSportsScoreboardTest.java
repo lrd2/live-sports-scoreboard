@@ -12,6 +12,7 @@ public class LiveSportsScoreboardTest {
     private static final String MEXICO = "Mexico";
     private static final String SWEDEN = "Sweden";
     private static final String SPAIN_UPPER_CASE = "SPAIN";
+    private static final String PORTUGAL = "Portugal";
 
     @Test
     public void shouldStartMatch() {
@@ -297,6 +298,122 @@ public class LiveSportsScoreboardTest {
                 () -> assertEquals(1, match.getHomeScore(), "Home score should remain unchanged"),
                 () -> assertEquals(1, match.getAwayScore(), "Away score should remain unchanged")
         );
+    }
+
+    @Test
+    public void shouldFinishMatch() {
+
+        //given
+        LiveSportsScoreboard liveSportsScoreboard = new LiveSportsScoreboard();
+        liveSportsScoreboard.startMatch(SPAIN, MEXICO);
+
+        //when
+        OperationResult result = liveSportsScoreboard.finishMatch(SPAIN, MEXICO);
+
+        //then
+        assertTrue(result.isSuccess(), "Match should be finished successfully");
+
+    }
+
+    @Test
+    public void shouldNotFinishMatchIfMatchDoesNotExist() {
+
+        //given
+        LiveSportsScoreboard liveSportsScoreboard = new LiveSportsScoreboard();
+
+        //when
+        OperationResult result = liveSportsScoreboard.finishMatch(SPAIN, MEXICO);
+
+        //then
+        assertFalse(result.isSuccess(), "Match should not be finished if it does not exist");
+
+    }
+
+    @Test
+    public void shouldNotFinishMatchIfTeamNameIsInvalid() {
+
+        //given
+        LiveSportsScoreboard liveSportsScoreboard = new LiveSportsScoreboard();
+        liveSportsScoreboard.startMatch(SPAIN, MEXICO);
+
+        //when
+        OperationResult result = liveSportsScoreboard.finishMatch("   ", MEXICO);
+
+        //then
+        assertFalse(result.isSuccess(), "Match should not be finished if team name is invalid");
+
+    }
+
+    @Test
+    public void shouldNotFinishMatchIfTeamNameIsNull() {
+
+        //given
+        LiveSportsScoreboard liveSportsScoreboard = new LiveSportsScoreboard();
+        liveSportsScoreboard.startMatch(SPAIN, MEXICO);
+
+        //when
+        OperationResult result = liveSportsScoreboard.finishMatch(null, MEXICO);
+
+        //then
+        assertFalse(result.isSuccess(), "Match should not be finished if team name is null");
+
+    }
+
+    @Test
+    public void shouldFinishOnlyOneMatch() {
+
+        //given
+        LiveSportsScoreboard liveSportsScoreboard = new LiveSportsScoreboard();
+        liveSportsScoreboard.startMatch(SPAIN, MEXICO);
+        liveSportsScoreboard.startMatch(SWEDEN, PORTUGAL);
+
+        //when
+        OperationResult result = liveSportsScoreboard.finishMatch(SPAIN, MEXICO);
+
+        //then
+        Match finishedMatch = liveSportsScoreboard.getMatches().stream()
+                .filter(match -> match.getHomeTeam().equals(SPAIN) && match.getAwayTeam().equals(MEXICO))
+                .findFirst()
+                .orElse(null);
+        Match existingMatch = liveSportsScoreboard.getMatches().stream()
+                .filter(match -> match.getHomeTeam().equals(SWEDEN) && match.getAwayTeam().equals(PORTUGAL))
+                .findFirst()
+                .orElse(null);
+        assertAll(
+                () -> assertTrue(result.isSuccess(), "Match should be finished successfully"),
+                () -> assertNull(finishedMatch, "The match should not be on the scoreboard"),
+                () -> assertNotNull(existingMatch, "The other match should still be on the scoreboard")
+        );
+    }
+
+    @Test
+    public void shouldNotFinishMatchIfHomeTeamNameIsMixedWithAwayTeamName() {
+
+        //given
+        LiveSportsScoreboard liveSportsScoreboard = new LiveSportsScoreboard();
+        liveSportsScoreboard.startMatch(SPAIN, MEXICO);
+
+        //when
+        OperationResult result = liveSportsScoreboard.finishMatch(MEXICO, SPAIN);
+
+        //then
+        assertFalse(result.isSuccess(), "Match should not be finished if home and away team names are mixed.");
+
+    }
+
+    @Test
+    public void shouldClearScoreboardAfterFinishingLastMatch() {
+
+        //given
+        LiveSportsScoreboard liveSportsScoreboard = new LiveSportsScoreboard();
+        liveSportsScoreboard.startMatch(SPAIN, MEXICO);
+
+        //when
+        liveSportsScoreboard.finishMatch(SPAIN, MEXICO);
+
+        //then
+        assertTrue(liveSportsScoreboard.getMatches().isEmpty(), "The scoreboard should be empty after finishing the last match");
+
     }
 
 }

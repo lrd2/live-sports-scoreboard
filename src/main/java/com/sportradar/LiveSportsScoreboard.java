@@ -58,6 +58,11 @@ public class LiveSportsScoreboard {
         }
     }
 
+    public OperationResult finishMatch(String homeTeam, String awayTeam) {
+        //TODO implement this method
+        return null;
+    }
+
     public Set<Match> getMatches() {
         return scoreboard.getMatches();
     }
