@@ -20,8 +20,7 @@ Given the timeframe and goal of the project, the design is kept simple and focus
 - The solution is good for managing scoreboards for some team sports, such as football or basketball, etc. However, the current
   implementation is focused on specifics of football and FIFA World Cup.:
     1. Each match has two teams, one of which is home and the other is away.
-    2. Each team has a unique name representing a country, but clubs are supported as long as they have unique names and there is no further specifics like leagues or divisions. 
-- The solution is not suitable for sports with more than two teams in a match, such as cricket or baseball.
+    2. Each team has a unique name representing a country, but clubs are supported as long as they have unique names and there is no further specifics like leagues or divisions.
 - The solution is not suitable for sports which score is presented in a different way than total number of points, such as tennis or volleyball.
 - The solution is not designed for concurrent access. It assumes a single-threaded environment.
 - The solution is optimized for a limited number of active matches and may require refactoring to handle a significantly larger dataset efficiently.
@@ -31,7 +30,6 @@ Given the timeframe and goal of the project, the design is kept simple and focus
 
 Due to the simplicity of the current design, there are several potential extensions that could be considered:
 - Support for more sports with different scoring systems.
-- Support for more than two teams in a match.
 - Support for concurrent access and scalability.
 - Support for persistence using a database or other storage solutions.
 - Support for more detailed match information, such as match duration, player statistics, etc.
