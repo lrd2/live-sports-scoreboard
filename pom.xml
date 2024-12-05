@@ -38,6 +38,7 @@
             <version>${cucumber.version}</version>
             <scope>test</scope>
         </dependency>
+
         <!-- Test Dependencies -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -45,12 +46,21 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+        <!--Required to run acceptance tests -->
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-suite</artifactId>
+            <version>1.10.0</version>
+            <scope>test</scope>
+        </dependency>
+        <!--Required to discover unit tests -->
         <dependency>
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-suite-api</artifactId>
             <version>${junit-platform.version}</version>
             <scope>test</scope>
         </dependency>
+        <!--Required for mocking-->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
